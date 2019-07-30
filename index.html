@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset="utf-8" />
+    <title>chrome tab capture tests</title>
+    <style>
+        html,
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        video {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <select id="RecordRTC_Extension_Options">
+        <option value="4">Chrome Tab</option>
+    </select>
+    <button id="btn-start-recording">Start Recording</button>
+    <button id="btn-stop-recording" disabled>Stop Recording</button>
+
+    <hr>
+    <video controls autoplay playsinline></video>
+
+
+    <script>
+        if (typeof RecordRTC_Extension === 'undefined') {
+            alert('RecordRTC chrome extension is either disabled or not installed.');
+        }
+
+        // first step
+        var recorder = new RecordRTC_Extension();
+
+        var video = document.querySelector('video');
+
+        function stopRecordingCallback(blob) {
+            video.src = video.srcObject = null;
+            video.src = URL.createObjectURL(blob);
+            recorder = null;
+        }
+
+        document.getElementById('btn-start-recording').onclick = function () {
+            this.disabled = true;
+            // you can find list-of-options here:
+            // https://github.com/muaz-khan/Chrome-Extensions/tree/master/screen-recording#getsupoortedformats
+            var options = recorder.getSupoortedFormats()[document.getElementById('RecordRTC_Extension_Options').value];
+
+            // second step
+            recorder.startRecording(options, function () {
+                document.getElementById('btn-stop-recording').disabled = false;
+            });
+        };
+
+        document.getElementById('btn-stop-recording').onclick = function () {
+            this.disabled = true;
+
+            // third and last step
+            recorder.stopRecording(stopRecordingCallback);
+        };
+    </script>
+
+    <footer style="margin-top: 20px;"><small id="send-message"></small></footer>
+    <script src="https://www.webrtc-experiment.com/common.js"></script>
+
+</body>
+
+</html>
