@@ -4,9 +4,10 @@ function captureDesktop() {
         return;
     }
 
+    // 呼ばれない
     if (recorder && recorder.streams) {
-        recorder.streams.forEach(function(stream, idx) {
-            stream.getTracks().forEach(function(track) {
+        recorder.streams.forEach(function (stream, idx) {
+            stream.getTracks().forEach(function (track) {
                 track.stop();
             });
 
@@ -23,17 +24,18 @@ function captureDesktop() {
     });
 
     if (enableTabCaptureAPI) {
+        console.log('captureTabUsingTabCapture in background.desktopCapture')
         captureTabUsingTabCapture();
         return;
     }
 
-    var screenSources = ['screen', 'window', 'audio'];
+    // var screenSources = ['screen', 'window', 'audio'];
 
-    if (enableSpeakers === false) {
-        screenSources = ['screen', 'window'];
-    }
+    // if (enableSpeakers === false) {
+    //     screenSources = ['screen', 'window'];
+    // }
 
-    chrome.desktopCapture.chooseDesktopMedia(screenSources, onAccessApproved);
+    // chrome.desktopCapture.chooseDesktopMedia(screenSources, onAccessApproved);
 }
 
 function onAccessApproved(chromeMediaSourceId, opts) {
@@ -58,7 +60,7 @@ function onAccessApproved(chromeMediaSourceId, opts) {
         videoMaxFrameRates = parseInt(videoMaxFrameRates);
 
         // 30 fps seems max-limit in Chrome?
-        if (videoMaxFrameRates /* && videoMaxFrameRates <= 30 */ ) {
+        if (videoMaxFrameRates /* && videoMaxFrameRates <= 30 */) {
             constraints.video.maxFrameRate = videoMaxFrameRates;
         }
     }
@@ -80,10 +82,10 @@ function onAccessApproved(chromeMediaSourceId, opts) {
         };
     }
 
-    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-        if(enableSpeakers && !enableScreen) {
+    navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+        if (enableSpeakers && !enableScreen) {
             var screenOnly = new MediaStream();
-            getTracks(stream, 'video').forEach(function(track) {
+            getTracks(stream, 'video').forEach(function (track) {
                 screenOnly.addTrack(track);
 
                 // remove video track, because we are gonna record only speakers
@@ -91,21 +93,21 @@ function onAccessApproved(chromeMediaSourceId, opts) {
             });
 
             initVideoPlayer(screenOnly);
-            addStreamStopListener(screenOnly, function() {
+            addStreamStopListener(screenOnly, function () {
                 stopScreenRecording();
             });
 
             // alert('You can stop recording only using extension icon. Whenever you are done, click extension icon to stop the recording.');
         }
         else {
-            addStreamStopListener(stream, function() {
+            addStreamStopListener(stream, function () {
                 stopScreenRecording();
             });
         }
 
         initVideoPlayer(stream);
         gotStream(stream);
-    }).catch(function(error) {
+    }).catch(function (error) {
         alert('Unable to capture screen using:\n' + JSON.stringify(constraints, null, '\t') + '\n\n' + error);
         setDefaults();
         chrome.runtime.reload();

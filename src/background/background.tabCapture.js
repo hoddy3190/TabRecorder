@@ -2,7 +2,8 @@ function captureTabUsingTabCapture(isNoAudio) {
     chrome.tabs.query({
         active: true,
         currentWindow: true
-    }, function(arrayOfTabs) {
+    }, function (arrayOfTabs) {
+        console.log(arrayOfTabs, 'arrayOfTabs');
         var activeTab = arrayOfTabs[0];
         var activeTabId = activeTab.id; // or do whatever you need
 
@@ -25,7 +26,7 @@ function captureTabUsingTabCapture(isNoAudio) {
 
         // chrome.tabCapture.onStatusChanged.addListener(function(event) { /* event.status */ });
 
-        chrome.tabCapture.capture(constraints, function(stream) {
+        chrome.tabCapture.capture(constraints, function (stream) {
             gotTabCaptureStream(stream, constraints);
 
             // chrome.tabs.update(activeTabId, {active: true});
@@ -36,7 +37,7 @@ function captureTabUsingTabCapture(isNoAudio) {
                     code: executeScriptForTabCapture.toString() + ';executeScriptForTabCapture();'
                 });
             }
-            catch(e) {}
+            catch (e) { }
         });
     });
 }
@@ -53,13 +54,13 @@ function gotTabCaptureStream(stream, constraints) {
 
     var newStream = new MediaStream();
 
-    if(enableTabCaptureAPIAudioOnly) {
-        getTracks(stream, 'audio').forEach(function(track) {
+    if (enableTabCaptureAPIAudioOnly) {
+        getTracks(stream, 'audio').forEach(function (track) {
             newStream.addTrack(track);
         });
     }
     else {
-        stream.getTracks().forEach(function(track) {
+        stream.getTracks().forEach(function (track) {
             newStream.addTrack(track);
         });
     }

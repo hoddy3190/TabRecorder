@@ -67,7 +67,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      * @example
      * recorder.record();
      */
-    this.record = function() {
+    this.record = function () {
         // github/muaz-khan/MultiStreamsMixer
         mixer = new MultiStreamsMixer(arrayOfMediaStreams);
 
@@ -89,8 +89,8 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
 
     function getAllVideoTracks() {
         var tracks = [];
-        arrayOfMediaStreams.forEach(function(stream) {
-            getTracks(stream, 'video').forEach(function(track) {
+        arrayOfMediaStreams.forEach(function (stream) {
+            getTracks(stream, 'video').forEach(function (track) {
                 tracks.push(track);
             });
         });
@@ -107,12 +107,12 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      *     video.src = URL.createObjectURL(blob);
      * });
      */
-    this.stop = function(callback) {
+    this.stop = function (callback) {
         if (!mediaRecorder) {
             return;
         }
 
-        mediaRecorder.stop(function(blob) {
+        mediaRecorder.stop(function (blob) {
             self.blob = blob;
 
             callback(blob);
@@ -128,7 +128,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      * @example
      * recorder.pause();
      */
-    this.pause = function() {
+    this.pause = function () {
         if (mediaRecorder) {
             mediaRecorder.pause();
         }
@@ -141,7 +141,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      * @example
      * recorder.resume();
      */
-    this.resume = function() {
+    this.resume = function () {
         if (mediaRecorder) {
             mediaRecorder.resume();
         }
@@ -154,7 +154,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      * @example
      * recorder.clearRecordedData();
      */
-    this.clearRecordedData = function() {
+    this.clearRecordedData = function () {
         if (mediaRecorder) {
             mediaRecorder.clearRecordedData();
             mediaRecorder = null;
@@ -174,7 +174,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      * @example
      * recorder.addStreams([newAudioStream, newVideoStream]);
      */
-    this.addStreams = function(streams) {
+    this.addStreams = function (streams) {
         if (!streams) {
             throw 'First parameter is required.';
         }
@@ -200,7 +200,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
      * @example
      * recorder.resetVideoStreams([newVideo1, newVideo2]);
      */
-    this.resetVideoStreams = function(streams) {
+    this.resetVideoStreams = function (streams) {
         if (!mixer) {
             return;
         }
@@ -214,7 +214,7 @@ function MultiStreamRecorder(arrayOfMediaStreams, options) {
 
     // for debugging
     this.name = 'MultiStreamRecorder';
-    this.toString = function() {
+    this.toString = function () {
         return this.name;
     };
 }

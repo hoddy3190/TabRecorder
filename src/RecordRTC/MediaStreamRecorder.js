@@ -81,7 +81,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * var arrayOfBlobs = recorder.getArrayOfBlobs();
      * @returns {Array} Returns array of recorded blobs.
      */
-    this.getArrayOfBlobs = function() {
+    this.getArrayOfBlobs = function () {
         return arrayOfBlobs;
     };
 
@@ -92,7 +92,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * @example
      * recorder.record();
      */
-    this.record = function() {
+    this.record = function () {
         // set defaults
         self.blob = null;
         self.clearRecordedData();
@@ -145,7 +145,7 @@ function MediaStreamRecorder(mediaStream, config) {
         }
 
         // Dispatching OnDataAvailable Handler
-        mediaRecorder.ondataavailable = function(e) {
+        mediaRecorder.ondataavailable = function (e) {
             if (e.data) {
                 allStates.push('ondataavailable: ' + bytesToSize(e.data.size));
             }
@@ -188,23 +188,23 @@ function MediaStreamRecorder(mediaStream, config) {
             }
         };
 
-        mediaRecorder.onstart = function() {
+        mediaRecorder.onstart = function () {
             allStates.push('started');
         };
 
-        mediaRecorder.onpause = function() {
+        mediaRecorder.onpause = function () {
             allStates.push('paused');
         };
 
-        mediaRecorder.onresume = function() {
+        mediaRecorder.onresume = function () {
             allStates.push('resumed');
         };
 
-        mediaRecorder.onstop = function() {
+        mediaRecorder.onstop = function () {
             allStates.push('stopped');
         };
 
-        mediaRecorder.onerror = function(error) {
+        mediaRecorder.onerror = function (error) {
             if (!error) {
                 return;
             }
@@ -239,7 +239,7 @@ function MediaStreamRecorder(mediaStream, config) {
                 }
             }
 
-            (function(looper) {
+            (function (looper) {
                 if (!self.manuallyStopped && mediaRecorder && mediaRecorder.state === 'inactive') {
                     delete config.timeslice;
 
@@ -305,8 +305,8 @@ function MediaStreamRecorder(mediaStream, config) {
      *     video.src = URL.createObjectURL(blob);
      * });
      */
-    this.stop = function(callback) {
-        callback = callback || function() {};
+    this.stop = function (callback) {
+        callback = callback || function () { };
 
         self.manuallyStopped = true; // used inside the mediaRecorder.onerror
 
@@ -321,7 +321,7 @@ function MediaStreamRecorder(mediaStream, config) {
         }
 
         if (typeof config.timeSlice === 'number') {
-            setTimeout(function() {
+            setTimeout(function () {
                 self.blob = new Blob(arrayOfBlobs, {
                     type: getMimeType(config)
                 });
@@ -338,7 +338,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * @example
      * recorder.pause();
      */
-    this.pause = function() {
+    this.pause = function () {
         if (!mediaRecorder) {
             return;
         }
@@ -355,7 +355,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * @example
      * recorder.resume();
      */
-    this.resume = function() {
+    this.resume = function () {
         if (!mediaRecorder) {
             return;
         }
@@ -372,7 +372,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * @example
      * recorder.clearRecordedData();
      */
-    this.clearRecordedData = function() {
+    this.clearRecordedData = function () {
         if (mediaRecorder && mediaRecorder.state === 'recording') {
             self.stop(clearRecordedDataCB);
         }
@@ -400,7 +400,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * internal.stream, internal.onpause, internal.onstop, etc.
      * @returns {Object} Returns internal recording object.
      */
-    this.getInternalRecorder = function() {
+    this.getInternalRecorder = function () {
         return mediaRecorder;
     };
 
@@ -436,7 +436,7 @@ function MediaStreamRecorder(mediaStream, config) {
      * var state = recorder.getState();
      * @returns {String} Returns recording state.
      */
-    this.getState = function() {
+    this.getState = function () {
         if (!mediaRecorder) {
             return 'inactive';
         }
@@ -455,12 +455,12 @@ function MediaStreamRecorder(mediaStream, config) {
      * var state = recorder.getAllStates();
      * @returns {Array} Returns all recording states
      */
-    this.getAllStates = function() {
+    this.getAllStates = function () {
         return allStates;
     };
 
-    // if any Track within the MediaStream is muted or not enabled at any time, 
-    // the browser will only record black frames 
+    // if any Track within the MediaStream is muted or not enabled at any time,
+    // the browser will only record black frames
     // or silence since that is the content produced by the Track
     // so we need to stopRecording as soon as any single track ends.
     if (typeof config.checkForInactiveTracks === 'undefined') {
@@ -489,7 +489,7 @@ function MediaStreamRecorder(mediaStream, config) {
 
     // for debugging
     this.name = 'MediaStreamRecorder';
-    this.toString = function() {
+    this.toString = function () {
         return this.name;
     };
 }

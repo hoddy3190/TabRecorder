@@ -1,25 +1,25 @@
 var runtimePort;
 
-chrome.runtime.onConnect.addListener(function(port) {
+chrome.runtime.onConnect.addListener(function (port) {
     runtimePort = port;
 
-    runtimePort.onMessage.addListener(function(message) {
+    runtimePort.onMessage.addListener(function (message) {
         if (!message || !message.messageFromContentScript1234) {
             return;
         }
 
-        if (message.startRecording) {
-            if(message.onlyMicrophone && enableCamera) {
-                message.startRecording = false;
-                message.stopRecording = true;
-                alert('Unable to access camera device.');
-                setDefaults();
-                return;
-            }
-        }
+        // if (message.startRecording) {
+        //     if (message.onlyMicrophone && enableCamera) {
+        //         message.startRecording = false;
+        //         message.stopRecording = true;
+        //         alert('Unable to access camera device.');
+        //         setDefaults();
+        //         return;
+        //     }
+        // }
 
         if (message.startRecording) {
-            if(message.dropdown) {
+            if (message.dropdown) {
                 openPreviewOnStopRecording = true;
                 openCameraPreviewDuringRecording = true;
             }
@@ -29,10 +29,11 @@ chrome.runtime.onConnect.addListener(function(port) {
                 return;
             }
 
-            if(message.RecordRTC_Extension) {
+            // webpageからextensionを呼び出したとき用？
+            if (message.RecordRTC_Extension) {
                 openPreviewOnStopRecording = false;
                 openCameraPreviewDuringRecording = false;
-                
+
                 enableTabCaptureAPI = message['enableTabCaptureAPI'] === true;
                 enableTabCaptureAPIAudioOnly = message['enableTabCaptureAPIAudioOnly'] === true;
                 enableScreen = message['enableScreen'] === true;
@@ -40,7 +41,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 enableCamera = message['enableCamera'] === true;
                 enableSpeakers = message['enableSpeakers'] === true;
 
-                startRecordingCallback = function(file) {
+                startRecordingCallback = function (file) {
                     port.postMessage({
                         messageFromContentScript1234: true,
                         startedRecording: true
@@ -55,7 +56,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                     enableScreen: enableScreen ? 'true' : 'false',
                     enableSpeakers: enableSpeakers ? 'true' : 'false',
                     isRecording: 'true'
-                }, function() {
+                }, function () {
                     getUserConfigs();
                 });
                 return;
@@ -66,10 +67,10 @@ chrome.runtime.onConnect.addListener(function(port) {
         }
 
         if (message.stopRecording) {
-            if(message.RecordRTC_Extension) {
-                stopRecordingCallback = function(file) {
+            if (message.RecordRTC_Extension) {
+                stopRecordingCallback = function (file) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         port.postMessage({
                             messageFromContentScript1234: true,
                             stoppedRecording: true,

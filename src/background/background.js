@@ -41,7 +41,7 @@ function gotStream(stream) {
             }
         }
 
-        if(enableTabCaptureAPIAudioOnly || (enableMicrophone && !enableCamera && !enableScreen) || (enableSpeakers && !enableScreen && !enableCamera)) {
+        if (enableTabCaptureAPIAudioOnly || (enableMicrophone && !enableCamera && !enableScreen) || (enableSpeakers && !enableScreen && !enableCamera)) {
             options.mimeType = 'audio/wav';
         }
     }
@@ -59,23 +59,23 @@ function gotStream(stream) {
 
     if (cameraStream) {
         var ignoreSecondPart = false;
-        
-        if(enableSpeakers && enableMicrophone) {
+
+        if (enableSpeakers && enableMicrophone) {
             var mixAudioStream = getMixedAudioStream([cameraStream, stream]);
-            if(mixAudioStream && getTracks(mixAudioStream, 'audio').length) {
+            if (mixAudioStream && getTracks(mixAudioStream, 'audio').length) {
                 ignoreSecondPart = true;
-                
+
                 var mixedTrack = getTracks(mixAudioStream, 'audio')[0];
                 stream.addTrack(mixedTrack);
-                getTracks(stream, 'audio').forEach(function(track) {
-                    if(track === mixedTrack) return;
+                getTracks(stream, 'audio').forEach(function (track) {
+                    if (track === mixedTrack) return;
                     stream.removeTrack(track);
                 });
             }
         }
 
-        if(!ignoreSecondPart) {
-            getTracks(cameraStream, 'audio').forEach(function(track) {
+        if (!ignoreSecondPart) {
+            getTracks(cameraStream, 'audio').forEach(function (track) {
                 stream.addTrack(track);
                 cameraStream.removeTrack(track);
             });
@@ -85,7 +85,7 @@ function gotStream(stream) {
     // fix https://github.com/muaz-khan/RecordRTC/issues/281
     options.ignoreMutedMedia = false;
 
-    if(options.mimeType === 'audio/wav') {
+    if (options.mimeType === 'audio/wav') {
         options.numberOfAudioChannels = 2;
         recorder = new StereoAudioRecorder(stream, options);
         recorder.streams = [stream];
@@ -94,7 +94,7 @@ function gotStream(stream) {
         // adjust video on top over screen
 
         // on faster systems (i.e. 4MB or higher RAM):
-        // screen: 3840x2160 
+        // screen: 3840x2160
         // camera: 1280x720
         stream.width = screen.width;
         stream.height = screen.height;
@@ -112,16 +112,16 @@ function gotStream(stream) {
         recorder = new MultiStreamRecorder([cameraStream, stream], options);
         recorder.streams = [stream, cameraStream];
     } else {
+        console.log('MediaStreamRecorder');
         recorder = new MediaStreamRecorder(stream, options);
         recorder.streams = [stream];
     }
-
     recorder.record();
 
     isRecording = true;
     onRecording();
 
-    addStreamStopListener(recorder.streams[0], function() {
+    addStreamStopListener(recorder.streams[0], function () {
         stopScreenRecording();
     });
 
@@ -133,7 +133,7 @@ function gotStream(stream) {
 }
 
 function stopScreenRecording() {
-    if(!recorder || !isRecording) return;
+    if (!recorder || !isRecording) return;
 
     if (timer) {
         clearTimeout(timer);
@@ -149,8 +149,8 @@ function stopScreenRecording() {
     });
 
     recorder.stop(function onStopRecording(blob, ignoreGetSeekableBlob) {
-        if(fixVideoSeekingIssues && recorder && !ignoreGetSeekableBlob) {
-            getSeekableBlob(recorder.blob, function(seekableBlob) {
+        if (fixVideoSeekingIssues && recorder && !ignoreGetSeekableBlob) {
+            getSeekableBlob(recorder.blob, function (seekableBlob) {
                 onStopRecording(seekableBlob, true);
             });
             return;
@@ -173,7 +173,7 @@ function stopScreenRecording() {
             }
         }
 
-        if(enableTabCaptureAPIAudioOnly || (enableMicrophone && !enableCamera && !enableScreen) || (enableSpeakers && !enableScreen && !enableCamera)) {
+        if (enableTabCaptureAPIAudioOnly || (enableMicrophone && !enableCamera && !enableScreen) || (enableSpeakers && !enableScreen && !enableCamera)) {
             mimeType = 'audio/wav';
             fileExtension = 'wav';
         }
@@ -182,7 +182,7 @@ function stopScreenRecording() {
             type: mimeType
         });
 
-        if(ignoreGetSeekableBlob === true) {
+        if (ignoreGetSeekableBlob === true) {
             file = new File([blob], getFileName(fileExtension), {
                 type: mimeType
             });
@@ -195,21 +195,21 @@ function stopScreenRecording() {
         // var formatted = convertTime(timeDifference);
         // file.duration = formatted;
 
-        DiskStorage.StoreFile(file, function(response) {
+        DiskStorage.StoreFile(file, function (response) {
             try {
-                videoPlayers.forEach(function(player) {
+                videoPlayers.forEach(function (player) {
                     player.srcObject = null;
                 });
                 videoPlayers = [];
-            } catch (e) {}
+            } catch (e) { }
 
-            if(false && openPreviewOnStopRecording) {
+            if (false && openPreviewOnStopRecording) {
                 chrome.storage.sync.set({
                     isRecording: 'false', // for dropdown.js
                     openPreviewPage: 'true' // for previewing recorded video
-                }, function() {
+                }, function () {
                     // wait 100 milliseconds to make sure DiskStorage finished its job
-                    setTimeout(function() {
+                    setTimeout(function () {
                         // reset & reload to make sure we clear everything
                         setDefaults();
                         chrome.runtime.reload();
@@ -218,15 +218,15 @@ function stopScreenRecording() {
                 return;
             }
 
-            false && setTimeout(function() {
+            false && setTimeout(function () {
                 setDefaults();
                 chrome.runtime.reload();
             }, 2000);
 
             // -------------
             if (recorder && recorder.streams) {
-                recorder.streams.forEach(function(stream, idx) {
-                    stream.getTracks().forEach(function(track) {
+                recorder.streams.forEach(function (stream, idx) {
+                    stream.getTracks().forEach(function (track) {
                         track.stop();
                     });
 
@@ -252,7 +252,7 @@ function stopScreenRecording() {
                 openPreviewPage: 'false'
             });
 
-            openPreviewOnStopRecording && chrome.tabs.query({}, function(tabs) {
+            openPreviewOnStopRecording && chrome.tabs.query({}, function (tabs) {
                 var found = false;
                 var url = 'chrome-extension://' + chrome.runtime.id + '/preview.html';
                 for (var i = tabs.length - 1; i >= 0; i--) {
@@ -283,8 +283,8 @@ function setDefaults() {
     });
 
     if (recorder && recorder.streams) {
-        recorder.streams.forEach(function(stream) {
-            stream.getTracks().forEach(function(track) {
+        recorder.streams.forEach(function (stream) {
+            stream.getTracks().forEach(function (track) {
                 track.stop();
             });
         });
@@ -317,7 +317,7 @@ function setDefaults() {
 }
 
 function getUserConfigs() {
-    chrome.storage.sync.get(null, function(items) {
+    chrome.storage.sync.get(null, function (items) {
         if (items['bitsPerSecond'] && items['bitsPerSecond'].toString().length && items['bitsPerSecond'] !== 'default') {
             bitsPerSecond = parseInt(items['bitsPerSecond']);
         }
@@ -366,38 +366,38 @@ function getUserConfigs() {
             cameraDevice = items['camera'];
         }
 
-        if(items['fixVideoSeekingIssues']) {
+        if (items['fixVideoSeekingIssues']) {
             fixVideoSeekingIssues = items['fixVideoSeekingIssues'] === 'true';
         }
 
-        if (enableMicrophone || enableCamera) {
-            if (!enableScreen && !enableSpeakers) {
-                captureCamera(function(stream) {
-                    gotStream(stream);
-                });
-                return;
-            }
+        // if (enableMicrophone || enableCamera) {
+        //     if (!enableScreen && !enableSpeakers) {
+        //         captureCamera(function (stream) {
+        //             gotStream(stream);
+        //         });
+        //         return;
+        //     }
 
-            captureCamera(function(stream) {
-                cameraStream = stream;
-                captureDesktop();
-            });
-            return;
-        }
+        //     captureCamera(function (stream) {
+        //         cameraStream = stream;
+        //         captureDesktop();
+        //     });
+        //     return;
+        // }
 
         captureDesktop();
     });
 }
 
-false && chrome.storage.sync.get('openPreviewPage', function(item) {
+false && chrome.storage.sync.get('openPreviewPage', function (item) {
     if (item.openPreviewPage !== 'true') return;
-    
+
     chrome.storage.sync.set({
         isRecording: 'false',
         openPreviewPage: 'false'
     });
 
-    chrome.tabs.query({}, function(tabs) {
+    chrome.tabs.query({}, function (tabs) {
         var found = false;
         var url = 'chrome-extension://' + chrome.runtime.id + '/preview.html';
         for (var i = tabs.length - 1; i >= 0; i--) {
