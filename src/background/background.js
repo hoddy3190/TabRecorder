@@ -420,3 +420,24 @@ false && chrome.storage.sync.get('openPreviewPage', function (item) {
     // invokeSaveAsDialog(file, file.name);
 });
 
+chrome.commands.onCommand.addListener(function (message) {
+
+    if (message == 'start_record') {
+        message = { messageFromContentScript1234: true, startRecording: true, dropdown: true };
+    } else {
+        message = { messageFromContentScript1234: true, stopRecording: true, dropdown: true };
+    }
+
+    chrome.storage.sync.set({
+        enableTabCaptureAPI: 'true',
+        enableTabCaptureAPIAudioOnly: 'false',
+        enableMicrophone: 'false',
+        enableCamera: 'false',
+        enableScreen: 'false',
+        isRecording: 'true',
+        enableSpeakers: 'false'
+    }, function () {
+        runtimePort.postMessage(message);
+        // window.close();
+    });
+});

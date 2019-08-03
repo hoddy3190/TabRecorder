@@ -117,7 +117,7 @@ chrome.runtime.onConnect.addListener(function (port) {
 
 
 
-
+/*
 chrome.commands.onCommand.addListener(function (message) {
 
     if (message == 'start_record') {
@@ -207,3 +207,4 @@ chrome.commands.onCommand.addListener(function (message) {
         return;
     }
 });
+*/
