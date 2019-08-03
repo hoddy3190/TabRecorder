@@ -1,44 +1,47 @@
 ﻿<style>
-* {
-  -webkit-user-select: none;
-  -user-select: none;
-  -webkit-user-drag: none;
-  -user-drag: none;
-}
+  * {
+    -webkit-user-select: none;
+    -user-select: none;
+    -webkit-user-drag: none;
+    -user-drag: none;
+  }
 
-@font-face {
-  font-family: 'Custom_Font';
-  src: local('.SFNSText-Light'), 
-       local('.HelveticaNeueDeskInterface-Light'), 
-       local('.LucidaGrandeUI'), 
-       local('Ubuntu Light'), 
-       local('Segoe UI Light'),
-       local('Roboto-Light'), 
-       local('DroidSans'), 
-       local('Tahoma');
-}
+  @font-face {
+    font-family: 'Custom_Font';
+    src: local('.SFNSText-Light'),
+      local('.HelveticaNeueDeskInterface-Light'),
+      local('.LucidaGrandeUI'),
+      local('Ubuntu Light'),
+      local('Segoe UI Light'),
+      local('Roboto-Light'),
+      local('DroidSans'),
+      local('Tahoma');
+  }
 
-input {
-    -webkit-user-select:initial;
-}
+  input {
+    -webkit-user-select: initial;
+  }
 
-* {
-  margin: 0;
-  padding: 0;
-}
+  * {
+    margin: 0;
+    padding: 0;
+  }
 
-html, body {
-  background-color: #F3F3F3;
-  font-family: Custom_Font!important;
-  font-size: 1em;
-  overflow: hidden;
-  overflow-x: hidden;
-}
-video {
+  html,
+  body {
+    background-color: #F3F3F3;
+    font-family: Custom_Font !important;
+    font-size: 1em;
+    overflow: hidden;
+    overflow-x: hidden;
+  }
+
+  video {
     border-left: 1px dotted red;
     border-right: 1px dotted red;
-}
-header {
+  }
+
+  header {
     position: absolute;
     background: white;
     height: 60px;
@@ -51,21 +54,23 @@ header {
     top: 0;
     border-bottom: 1px dotted red;
     overflow: hidden;
-}
+  }
 
-#btn-upload, #btn-recordings-list {
+  #btn-upload,
+  #btn-recordings-list {
     float: right;
     height: 48px;
     margin-top: 5px;
     cursor: pointer;
-}
+  }
 
-#btn-upload {
+  #btn-upload {
     height: 42px;
     margin-top: 10px;
-}
+  }
 
-#btn-upload-dropdown, #btn-recordings-list-dropdown {
+  #btn-upload-dropdown,
+  #btn-recordings-list-dropdown {
     display: none;
     position: absolute;
     top: 80px;
@@ -77,72 +82,75 @@ header {
     text-align: left;
     font-size: 18px;
     z-index: 9;
-}
+  }
 
-.visible {
-  display: block!important;
-}
+  .visible {
+    display: block !important;
+  }
 
-#btn-upload-dropdown div, #btn-recordings-list-dropdown div {
-  padding: 5px 10px;
-  border-bottom: 1px dotted red;
-}
+  #btn-upload-dropdown div,
+  #btn-recordings-list-dropdown div {
+    padding: 5px 10px;
+    border-bottom: 1px dotted red;
+  }
 
-#btn-upload-dropdown div:hover, #btn-recordings-list-dropdown div:hover {
-  background: #F3F3F3;
-}
+  #btn-upload-dropdown div:hover,
+  #btn-recordings-list-dropdown div:hover {
+    background: #F3F3F3;
+  }
 
-.btn-upload-dropdown-selected {
-  background: #dad6d6!important;
-}
+  .btn-upload-dropdown-selected {
+    background: #dad6d6 !important;
+  }
 
-#btn-recordings-list {
-  float: left;
-}
+  #btn-recordings-list {
+    float: left;
+  }
 
-#btn-recordings-list-dropdown {
-  left: 27px;
-  right: auto;
-  max-height: 40%;
-  overflow: auto;
-}
+  #btn-recordings-list-dropdown {
+    left: 27px;
+    right: auto;
+    max-height: 40%;
+    overflow: auto;
+  }
 
-.cross-icon, .edit-icon {
+  .cross-icon,
+  .edit-icon {
     float: right;
     width: 22px;
     margin-left: 20px;
     cursor: pointer;
-}
+  }
 
-.cross-icon {
-  margin-left: 15px;
-}
+  .cross-icon {
+    margin-left: 15px;
+  }
 
-#browser-cache .cross-icon {
+  #browser-cache .cross-icon {
     float: none;
     vertical-align: middle;
     margin: 0;
     width: 15px;
-}
+  }
 </style>
 
 <title>RecordRTC Extension</title>
 <link rel="manifest" href="manifest.json">
 <header>
-    <img id="btn-recordings-list" src="images/list-icon.png" title="List Of Recordings">
-    <img id="btn-upload" src="images/upload-icon.png" title="Upload">
-    
-    <p style="position: absolute;right: 10%;">
-      <span style="font-size: .6em; margin-left: 20px;" id="file-size" title="Size"></span>
-      <span style="font-size: .6em; margin-left: 20px;" id="file-resolutions" title="Resolutions"></span>
-      <span style="font-size: .6em; margin-left: 20px;" id="file-duration" title="Duration"></span>
-    </p>
+  <img id="btn-recordings-list" src="images/list-icon.png" title="List Of Recordings">
+  <img id="btn-upload" src="images/upload-icon.png" title="Upload">
 
-    <p>
-      <span id="file-name" title="Recording Name"></span>
-    </p>
+  <p style="position: absolute;right: 10%;">
+    <span style="font-size: .6em; margin-left: 20px;" id="file-size" title="Size"></span>
+    <span style="font-size: .6em; margin-left: 20px;" id="file-resolutions" title="Resolutions"></span>
+    <span style="font-size: .6em; margin-left: 20px;" id="file-duration" title="Duration"></span>
+  </p>
 
-    <span id="browser-cache" style="font-size: 17px"></span>
+  <p>
+    <span id="file-name" title="Recording Name"></span>
+  </p>
+
+  <span id="browser-cache" style="font-size: 17px"></span>
 </header>
 
 <div id="btn-upload-dropdown">

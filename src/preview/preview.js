@@ -34,21 +34,21 @@ function onGettingFile(f, item) {
 
     file.item = item;
 
-    if(!file.url || file.url.toString().toLowerCase().indexOf('youtube') !== -1) {
+    if (!file.url || file.url.toString().toLowerCase().indexOf('youtube') !== -1) {
         file.url = URL.createObjectURL(file);
     }
 
-    (function() {
+    (function () {
         // this function calculates the duration
         var hidden = document.createElement('video');
         var url = file.url;
         hidden.currentTime = 9999999999;
-        hidden.onloadedmetadata = function() {
-            if(url !== file.url) return;
+        hidden.onloadedmetadata = function () {
+            if (url !== file.url) return;
 
             fresolutions.innerHTML = hidden.clientWidth + 'x' + hidden.clientHeight;
 
-            if(hidden.duration === Infinity) {
+            if (hidden.duration === Infinity) {
                 setTimeout(hidden.onloadedmetadata, 1000);
                 return;
             }
@@ -62,7 +62,7 @@ function onGettingFile(f, item) {
         hidden.play();
     })();
 
-    video.onloadedmetadata = function() {
+    video.onloadedmetadata = function () {
         // video.onloadedmetadata = null;
 
         // seek back to the beginning
@@ -72,7 +72,7 @@ function onGettingFile(f, item) {
     video.src = file.url;
     video.currentTime = 9999999999;
 
-    if(file.name && (file.name.indexOf('.mp3') !== -1 || file.name.indexOf('.wav') !== -1 || file.name.indexOf('.ogg') !== -1)) {
+    if (file.name && (file.name.indexOf('.mp3') !== -1 || file.name.indexOf('.wav') !== -1 || file.name.indexOf('.ogg') !== -1)) {
         video.style.background = 'url(images/no-video.png) no-repeat center center';
         video.currentTime = 0;
     }
@@ -84,7 +84,7 @@ function onGettingFile(f, item) {
     fsize.innerHTML = bytesToSize(file.size);
 
     setVideoWidth();
-    video.onclick = function() {
+    video.onclick = function () {
         video.onclick = null;
         video.style.cursor = '';
         video.play();
@@ -100,12 +100,12 @@ function onGettingFile(f, item) {
     }
     browserCache.innerHTML = html;
     if (browserCache.querySelector('.cross-icon')) {
-        browserCache.querySelector('.cross-icon').onclick = function() {
+        browserCache.querySelector('.cross-icon').onclick = function () {
             if (window.confirm('Do you want to delete this video from server?')) {
-                deleteFromPHPServer(item.name, function(response) {
+                deleteFromPHPServer(item.name, function (response) {
                     DiskStorage.UpdateFileInfo(file.name, {
                         php: ''
-                    }, function() {
+                    }, function () {
                         if (response === 'deleted') {
                             location.reload();
                         } else {
@@ -118,23 +118,26 @@ function onGettingFile(f, item) {
     }
 
     localStorage.setItem('selected-file', file.name);
+
+    // 強制ダウンロード
+    document.getElementById('browser-cache').getElementsByTagName('a')[0].click()
 }
 
 var recentFile = localStorage.getItem('selected-file');
-DiskStorage.GetLastSelectedFile(recentFile, function(file) {
+DiskStorage.GetLastSelectedFile(recentFile, function (file) {
     if (!file) {
         onGettingFile(file);
         return;
     }
 
-    DiskStorage.GetFilesList(function(list) {
+    DiskStorage.GetFilesList(function (list) {
         if (!recentFile) {
             onGettingFile(file, list[0]);
             return;
         }
 
         var found;
-        list.forEach(function(item) {
+        list.forEach(function (item) {
             if (typeof item === 'string') {
                 if (item === recentFile) {
                     found = {
@@ -159,7 +162,7 @@ DiskStorage.GetLastSelectedFile(recentFile, function(file) {
 });
 
 var btnUploadDropDown = document.querySelector('#btn-upload-dropdown');
-document.querySelector('#btn-upload').onclick = function(e) {
+document.querySelector('#btn-upload').onclick = function (e) {
     e.stopPropagation();
 
     if (!file) {
@@ -175,7 +178,7 @@ document.querySelector('#btn-upload').onclick = function(e) {
 };
 
 var btnRecordingsListDropDown = document.querySelector('#btn-recordings-list-dropdown');
-document.querySelector('#btn-recordings-list').onclick = function(e) {
+document.querySelector('#btn-recordings-list').onclick = function (e) {
     e.stopPropagation();
 
     if (btnRecordingsListDropDown.className === 'visible') {
@@ -185,19 +188,19 @@ document.querySelector('#btn-recordings-list').onclick = function(e) {
         btnRecordingsListDropDown.className = 'visible';
 
         btnRecordingsListDropDown.innerHTML = '';
-        DiskStorage.GetFilesList(function(list) {
+        DiskStorage.GetFilesList(function (list) {
             if (!list.length) {
                 btnRecordingsListDropDown.className = '';
                 alert('You have no recordings.');
                 return;
             }
 
-            list.forEach(function(item) {
+            list.forEach(function (item) {
                 var div = document.createElement('div');
                 div.innerHTML = '<img src="images/cross-icon.png" class="cross-icon"><img src="images/edit-icon.png" class="edit-icon">' + item.display;
                 btnRecordingsListDropDown.appendChild(div);
 
-                div.querySelector('.cross-icon').onclick = function(e) {
+                div.querySelector('.cross-icon').onclick = function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -217,8 +220,8 @@ document.querySelector('#btn-recordings-list').onclick = function(e) {
                         div.parentNode.removeChild(div);
                     }
 
-                    DiskStorage.RemoveFile(item.name, function() {
-                        if(!item.php || !item.php.length) {
+                    DiskStorage.RemoveFile(item.name, function () {
+                        if (!item.php || !item.php.length) {
                             afterDelete();
                             return;
                         }
@@ -227,7 +230,7 @@ document.querySelector('#btn-recordings-list').onclick = function(e) {
                     });
                 };
 
-                div.querySelector('.edit-icon').onclick = function(e) {
+                div.querySelector('.edit-icon').onclick = function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -235,7 +238,7 @@ document.querySelector('#btn-recordings-list').onclick = function(e) {
 
                     DiskStorage.UpdateFileInfo(item.name, {
                         display: newFileName
-                    }, function() {
+                    }, function () {
                         item.display = newFileName;
 
                         onGettingFile(file, item);
@@ -243,11 +246,11 @@ document.querySelector('#btn-recordings-list').onclick = function(e) {
                     });
                 };
 
-                div.onclick = function(e) {
+                div.onclick = function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    DiskStorage.Fetch(item.name, function(file) {
+                    DiskStorage.Fetch(item.name, function (file) {
                         onGettingFile(file, item);
                     });
 
@@ -262,7 +265,7 @@ document.querySelector('#btn-recordings-list').onclick = function(e) {
     }
 };
 
-document.body.onclick = function() {
+document.body.onclick = function () {
     if (btnUploadDropDown.className === 'visible') {
         btnUploadDropDown.className = '';
     }
