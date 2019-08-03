@@ -1,5 +1,10 @@
 # TabRecorder
 
+puppeteerでショートカットキーを押してchrome extensionを起動させる。なぜこんなことをするかというと、[activeTab permissionの制約](https://developer.chrome.com/extensions/activeTab#invoking-activeTab)があるため。
+jsからbrowseractionやpageactionを起動させることはできなかったため、4番目のcommand apiを使うことにした。
+
+ただ、手動でbrowseraction(拡張機能ボタンをクリックする）をしたあとじゃないとcommand apiがたたけない状況になっている。
+原因はつかめていない。
 
 ## 動作確認
 
