@@ -1,0 +1,23 @@
+{
+  "name": "tabrecorder",
+  "version": "1.0.0",
+  "description": "カスタムの Chrome アプリと拡張機能を作成して公開する https://support.google.com/chrome/a/answer/2714278?hl=ja",
+  "main": "launch.js",
+  "dependencies": {},
+  "devDependencies": {
+    "puppeteer": "^1.19.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hoddy3190/TabRecorder.git"
+  },
+  "author": "Hodaka Suzuki",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hoddy3190/TabRecorder/issues"
+  },
+  "homepage": "https://github.com/hoddy3190/TabRecorder#readme"
+}
