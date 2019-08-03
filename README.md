@@ -3,8 +3,23 @@
 puppeteerでショートカットキーを押してchrome extensionを起動させる。なぜこんなことをするかというと、[activeTab permissionの制約](https://developer.chrome.com/extensions/activeTab#invoking-activeTab)があるため。
 jsからbrowseractionやpageactionを起動させることはできなかったため、4番目のcommand apiを使うことにした。
 
-ただ、手動でbrowseraction(拡張機能ボタンをクリックする）をしたあとじゃないとcommand apiがたたけない状況になっている。
-原因はつかめていない。
+でも、さらに問題があり、puppeteerからだとshortcut keyがたたけないことが判明
+
++ https://github.com/GoogleChrome/puppeteer/issues/2210
++ https://github.com/dvdvdmt/popup-tab-switcher/issues/1
++ https://stackoverflow.com/a/37993879/3167855
+
+なので、spawnからapplescriptを呼び出してshortcut keyをたたく形にした。
+
+## 事前準備
+
+applescriptが任意のアプリケーション上でキー操作をしようとすると、「osascriptにはキー操作の送信は許可されません」とエラーがでるので、  
+システム環境設定 >> セキュリティとプライバシー >> プライバシー >> アクセシビリティ　からiterm2の制御を許可する必要がある。
+
++ thanks
+  - [Complete list of AppleScript key codes](https://eastmanreference.com/complete-list-of-applescript-key-codes)
+  - [AppleScriptをspawnで実行](https://scrapbox.io/meganii/AppleScript%E3%82%92spawn%E3%81%A7%E5%AE%9F%E8%A1%8C)
+
 
 ## 動作確認
 
