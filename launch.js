@@ -1,4 +1,8 @@
 const puppeteer = require('puppeteer');
+const path = require('path');
+const { spawn } = require('child_process');
+
+const scriptPath = path.join(__dirname, 'applescript/startrecording.applescript');
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -9,15 +13,17 @@ const puppeteer = require('puppeteer');
         ],
     });
     const page = await browser.newPage();
-    await page.goto('file:///Users/hodaka.suzuki/ghq/github.com/hoddy3190/TabRecorder/index.html');
+    await page.goto('file:///Users/hodaka.suzuki/ghq/github.com/hoddy3190/gamecube/graph_movie/static/index.html');
     // await page.goto("https://www.google.com");
     // await page.screenshot({ path: 'example.png' });
 
-    await page.keyboard.down('ControlLeft');
-    await page.keyboard.down('ShiftLeft');
-    await page.keyboard.press('KeyY');
-    await page.keyboard.up('ControlLeft');
-    await page.keyboard.up('ShiftLeft');
+    const ascript = spawn('osascript', [scriptPath]);
+
+    // await page.keyboard.down('AltLeft');
+    // await page.keyboard.down('ShiftLeft');
+    // await page.keyboard.press('KeyP');
+    // await page.keyboard.up('AltLeft');
+    // await page.keyboard.up('ShiftLeft');
 
     // await browser.close();
 })();
